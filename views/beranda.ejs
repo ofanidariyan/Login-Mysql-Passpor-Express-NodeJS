@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to Node JS APP</title>
+  <link href='http://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  
+      <link rel="stylesheet" href="css/style.css">
+
+  
+</head>
+
+<body>
+
+<div class="container">
+      <div class="row">
+    <br><br><br>
+
+
+
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-xs-offset-0 col-sm-offset-0 col-md-offset-3 col-lg-offset-3 toppad" >
+   
+   
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Hai, <%= user.user_fullname %></h3>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="img/avatar-300x300.png" class="img-circle img-responsive"> </div>
+                
+                <!--<div class="col-xs-10 col-sm-10 hidden-md hidden-lg"> <br>
+                  <dl>
+                    <dt>DEPARTMENT:</dt>
+                    <dd>Administrator</dd>
+                    <dt>HIRE DATE</dt>
+                    <dd>11/12/2013</dd>
+                    <dt>DATE OF BIRTH</dt>
+                       <dd>11/12/2013</dd>
+                    <dt>GENDER</dt>
+                    <dd>Male</dd>
+                  </dl>
+                </div>-->
+                <div class=" col-md-9 col-lg-9 "> 
+                  <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                       <% if (PesanSukses.length > 0) { %>
+                
+            <div class="alert alert-success fade in alert-dismissable" style="margin-top:18px;">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">&times;</a>
+            <strong>Peringatan!</strong> <%= PesanSukses %>
+            </div>
+
+
+            <% } %>
+                        <td>Full Name:</td>
+                        <td> <%= user.user_fullname %></td>
+                      </tr>
+                      <tr>
+                        <td>UserName:</td>
+                        <td><%= user.user_login %></td>
+                      </tr>
+                      <tr>
+                        <td>Hobby</td>
+                        <td><%= user.user_hobby %></td>
+                      </tr>
+
+                      <tr>
+                        <td>Alamat</td>
+                        <td><%= user.user_address %></td>
+                      </tr>
+                   
+                         
+                     
+                    </tbody>
+                  </table>
+                  
+                  <a href="/userdata" class="btn btn-primary">Edit Profil</a>
+                  <a href="/logout" class="btn btn-primary btn-danger">Logout</a>
+                </div>
+              </div>
+            </div>
+                 <div class="panel-footer">
+                        
+                        
+                    </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/index.js"></script>
+
+</body>
+</html>
