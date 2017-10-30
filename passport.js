@@ -29,9 +29,11 @@ module.exports = function(passport) {
   });
 
   passport.deserializeUser(function(id, done) {
+
     RunningDatabase.query("SELECT * FROM user_register WHERE user_id = ? ", [id], function(err, rows) {
       done(err, rows[0]);
     });
+
   });
 
 
@@ -52,7 +54,8 @@ module.exports = function(passport) {
 
           if (rows.length) {
 
-            return done(null, false, req.flash('registerPesanError', 'User telah tersedia.'));
+            let error = req.flash('registerPesanError', 'User telah tersedia.');
+            return done(null, false, error);
 
           } else {
 
@@ -89,17 +92,23 @@ module.exports = function(passport) {
         passReqToCallback: true
       },
       function(req, username, password, done) {
+
         RunningDatabase.query("SELECT * FROM user_register WHERE user_login = ?", [username], function(err, rows) {
 
           if (err)
             return done(err);
 
           if (!rows.length) {
-            return done(null, false, req.flash('loginPesanError', 'User tidak ditemukan.'));
+            let error = req.flash('loginPesanError', 'User tidak ditemukan.');
+            return done(null, false, error);
           }
 
-          if (sha512(password, rows[0].user_salt) !== rows[0].user_password)
-            return done(null, false, req.flash('loginPesanError', 'Password yang anda masukkan belum benar.'));
+          let encryptPass = sha512(password, rows[0].user_salt);
+
+          if (encryptPass !== rows[0].user_password) {
+            let err = req.flash('loginPesanError', 'Password yang anda masukkan belum benar.');
+            return done(null, false, error);
+          }
 
           return done(null, rows[0]);
 
@@ -144,14 +153,13 @@ module.exports = function(passport) {
         } else {
 
           let message = req.flash('PesanSukses', 'Data profil berhasil terUpdate.');
+
           RunningDatabase.query("UPDATE user_register SET user_fullname = ?, user_password = ?, user_hobby = ?, user_address = ? WHERE user_login= ?", [inputUserBaru.user_fullname, inputUserBaru.user_password, inputUserBaru.user_hobby, inputUserBaru.user_address, user.user_login], function(err, rows) {
             return done(null, false, message);
             return done(null, user);
           });
 
         }
-
-
 
       })
   );
