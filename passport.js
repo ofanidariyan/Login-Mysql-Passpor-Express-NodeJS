@@ -3,9 +3,9 @@ var mysql = require('mysql');
 var crypto = require('crypto');
 var bcrypt = require('bcrypt-nodejs');
 var dbconfig = require('./configDB');
-var RunningDatabase = mysql.createConnection(dbconfig.makekoneksi);
+var RunningDatabase = mysql.createConnection(dbconfig.connection);
 
-RunningDatabase.query('USE ' + dbconfig.database);
+RunningDatabase.query(`USE ${dbconfig.database}`);
 
 module.exports = function(passport) {
 
@@ -49,6 +49,7 @@ module.exports = function(passport) {
         let body = body;
 
         RunningDatabase.query("SELECT * FROM user_register WHERE user_login = ?", [username], function(err, rows) {
+
           if (err)
             return done(err);
 
@@ -71,8 +72,10 @@ module.exports = function(passport) {
             };
 
             let data = [inputUserBaru.user_fullname, inputUserBaru.user_login, inputUserBaru.user_password, inputUserBaru.user_salt, inputUserBaru.user_hobby, inputUserBaru.user_address];
+
             RunningDatabase.query("INSERT INTO user_register ( user_fullname, user_login, user_password, user_salt, user_hobby, user_address ) values (?,?,?,?,?,?)", data,
               function(err, rows) {
+
                 inputUserBaru.user_id = rows.insertId;
                 return done(null, inputUserBaru);
 
@@ -99,15 +102,19 @@ module.exports = function(passport) {
             return done(err);
 
           if (!rows.length) {
+
             let error = req.flash('loginPesanError', 'User tidak ditemukan.');
             return done(null, false, error);
+
           }
 
           let encryptPass = sha512(password, rows[0].user_salt);
 
           if (encryptPass !== rows[0].user_password) {
+
             let err = req.flash('loginPesanError', 'Password yang anda masukkan belum benar.');
             return done(null, false, error);
+
           }
 
           return done(null, rows[0]);
@@ -127,7 +134,8 @@ module.exports = function(passport) {
       function(req, username, password, done) {
         let body = req.body;
         let user = req.user;
-        var passwordData = sha512(body.user_password, user.user_salt);
+        let passwordData = sha512(body.user_password, user.user_salt);
+        let oldPassword = sha512(body.user_oldpassword, user.user_salt);
 
         var inputUserBaru = {
           user_fullname: body.user_fullname,
@@ -139,13 +147,12 @@ module.exports = function(passport) {
           user_address: body.user_address
         };
 
-
-        if (sha512(body.user_oldpassword, user.user_salt) !== user.user_password) {
+        if (oldPassword !== user.user_password) {
 
           let error = req.flash('loginUpdateError', 'Data Old Password yang dimasukkan tidak sesuai.');
           return done(null, false, error);
 
-        } else if (sha512(body.user_password, user.user_salt) == user.user_password) {
+        } else if (passwordData == user.user_password) {
 
           let error = req.flash('loginUpdateError', 'Data Password lama dan baru tidak boleh sama.');
           return done(null, false, error);
